@@ -2,6 +2,8 @@ import React, { Component } from "react"
 import ApiContext from "../ApiContext"
 import config from "../config"
 import ValidationError from "../ValidationError/ValidationError"
+import "./AddNote.css"
+
 
 export default class AddNote extends Component {
   constructor(props) {
