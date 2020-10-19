@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import ApiContext from "../ApiContext"
 import config from "../config"
+import "./AddFolder.css"
+
 
 export default class AddFolder extends Component {
   static contextType = ApiContext
