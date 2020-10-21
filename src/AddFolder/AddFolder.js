@@ -6,7 +6,7 @@ import "./AddFolder.css"
 
 export default class AddFolder extends Component {
   static contextType = ApiContext
-
+ 
   onAddFolder = (e) => {
     e.preventDefault()
     const name = e.target.name.value
