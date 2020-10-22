@@ -5,14 +5,14 @@ import ValidationError from "../ValidationError/ValidationError"
 import "./AddNote.css"
 
 export default class AddNote extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      name: {
-        value: "",
-        touched: false,
-      },
-    }
+  static contextType = ApiContext
+
+  state = {
+    name: {
+      value: "",
+      touched: false,
+    },
+    error: null,
   }
 
   updateName(name) {
@@ -25,8 +25,6 @@ export default class AddNote extends Component {
       return "The name field can not be empty"
     }
   }
-
-  static contextType = ApiContext
 
   onAddNote = (e) => {
     e.preventDefault()
@@ -42,17 +40,22 @@ export default class AddNote extends Component {
         "content-type": "application/json",
       },
       body: JSON.stringify(note),
-    }).then((res) => {
-      this.props.history.push("/")
     })
-    .catch((error)=>{
-      console.error({error})
-    })
+      .then((res) => {
+        this.context.getData()
+        this.props.history.push("/")
+      })
+      .catch((error) => {
+        this.setState({
+          error:error.message
+        })
+      })
   }
 
   render() {
     return (
       <form id="add-note" onSubmit={this.onAddNote}>
+      {this.state.error}
         <label id="label"> Name </label>
         <input
           type="text"
@@ -69,7 +72,9 @@ export default class AddNote extends Component {
         <input type="text" id="content" content="content" />
         <select name="folderId">
           {this.context.folders.map((folder) => (
-            <option value={folder.id}>{folder.name}</option>
+            <option key={folder.id} value={folder.id}>
+              {folder.name}
+            </option>
           ))}
         </select>
         <button type="submit" disabled={this.validateName()}>

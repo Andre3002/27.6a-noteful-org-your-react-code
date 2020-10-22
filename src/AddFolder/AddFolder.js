@@ -4,16 +4,15 @@ import config from "../config"
 import "./AddFolder.css"
 import ValidationError from "../ValidationError/ValidationError"
 
-
 export default class AddFolder extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      name: {
-        value: "",
-        touched: false,
-      },
-    }
+  static contextType = ApiContext
+
+  state = {
+    name: {
+      value: "",
+      touched: false,
+    },
+    error: null,
   }
 
   updateName(name) {
@@ -27,8 +26,6 @@ export default class AddFolder extends Component {
     }
   }
 
-  static contextType = ApiContext
-
   onAddFolder = (e) => {
     e.preventDefault()
     const name = e.target.name.value
@@ -37,17 +34,22 @@ export default class AddFolder extends Component {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(folder),
-    }).then((res) => {
-      this.props.history.push("/")
     })
-    .catch((error)=>{
-      console.error({error})
-    })
+      .then((res) => {
+        this.context.getData()
+        this.props.history.push("/")
+      })
+      .catch((error) => {
+        this.setState({
+          error:error.message
+        })
+      })
   }
 
   render() {
     return (
       <form id="add-folder" onSubmit={this.onAddFolder}>
+      {this.state.error}
         <label id="label"> Name </label>
         <input
           type="text"
