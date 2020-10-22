@@ -45,6 +45,9 @@ export default class AddNote extends Component {
     }).then((res) => {
       this.props.history.push("/")
     })
+    .catch((error)=>{
+      console.error({error})
+    })
   }
 
   render() {
